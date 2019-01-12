@@ -16,34 +16,26 @@
         <a href=https://github.com/UniBreakfast/play001>git</a>
       </nav>
       <section>
-        <article>
-          <h4>HTML</h4>
-          <pre id=html></pre>
-        </article>
-        <article>
-          <h4>CSS</h4>
-          <pre id=css></pre>
-        </article>
-        <article>
-          <h4>JS</h4>
-          <pre id=js></pre>
-        </article>
-        <article>
-          <h4>common JS</h4>
-          <pre id=comjs></pre>
-        </article>
+        <article> <h4>HTML</h4>      <pre id=html></pre>  </article>
+        <article> <h4>CSS</h4>       <pre id=css></pre>   </article>
+        <article> <h4>JS</h4>        <pre id=js></pre>    </article>
+        <article> <h4>common JS</h4> <pre id=comjs></pre> </article>
+        <article> <h4>PHP</h4>       <pre id=php></pre>   </article>
       </section>
 
     </div>
 
     <script>
       function insertPreCode(from, to) {
-        request('GET', from, data => { byId(to).innerText += data+'\n\n' }) }
+        request('GET', from, data =>
+                { byId(to).innerText += data+'\n\n' }, mur,_,_,_, true) }
       insertPreCode('../index.html', 'html')
       insertPreCode('../style.css', 'css')
       insertPreCode('../script.js', 'js')
       insertPreCode('../_common/JS/request.js', 'comjs')
       insertPreCode('../_common/JS/shorts.js', 'comjs')
+      insertPreCode('https://raw.githubusercontent.com/UniBreakfast/play001'+
+                    '/master/play001/process.php', 'php')
 
     </script>
   </body>
