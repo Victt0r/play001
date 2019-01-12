@@ -37,13 +37,15 @@
     </div>
 
     <script>
-      request('GET','../index.html', data => { byId('html').innerText = data })
-      request('GET','../style.css', data => { byId('css').innerText = data })
-      request('GET','../script.js', data => { byId('js').innerText = data })
-      request('GET','../_common/JS/request.js', data =>
-              { byId('comjs').innerText += data+'\n\n' })
-      request('GET','../_common/JS/shorts.js', data =>
-              { byId('comjs').innerText += data+'\n\n' })
+      function insertPreCode(from, to) {
+        request('GET', from, data => { byId(to).innerText += data+'\n\n' })
+      }
+      insertPreCode('../index.html', 'html')
+      insertPreCode('../style.css', 'css')
+      insertPreCode('../script.js', 'js')
+      insertPreCode('../_common/JS/request.js', 'comjs')
+      insertPreCode('../_common/JS/shorts.js', 'comjs')
+
     </script>
   </body>
 </html>
