@@ -1,9 +1,4 @@
 
+console.log('hello from PLAY 001')
 
-
-request('GET','style.css', data => {
-  const pre = document.createElement('pre')
-  pre.innerText = data
-  document.getElementById('body').appendChild(pre)
-})
 

@@ -5,6 +5,7 @@
     <title>PLAY 001 - site profile</title>
     <link href=../style.css rel=stylesheet>
     <script src=../_common/JS/request.js></script>
+    <script src=../_common/JS/shorts.js></script>
 
   </head>
   <body>
@@ -14,9 +15,35 @@
         <a href=..>play 001</a>
         <a href=https://github.com/UniBreakfast/play001>git</a>
       </nav>
+      <section>
+        <article>
+          <h4>HTML</h4>
+          <pre id=html></pre>
+        </article>
+        <article>
+          <h4>CSS</h4>
+          <pre id=css></pre>
+        </article>
+        <article>
+          <h4>JS</h4>
+          <pre id=js></pre>
+        </article>
+        <article>
+          <h4>common JS</h4>
+          <pre id=comjs></pre>
+        </article>
+      </section>
 
     </div>
 
-    <script src=script.js></script>
+    <script>
+      request('GET','../index.html', data => { byId('html').innerText = data })
+      request('GET','../style.css', data => { byId('css').innerText = data })
+      request('GET','../script.js', data => { byId('js').innerText = data })
+      request('GET','../_common/JS/request.js', data =>
+              { byId('comjs').innerText += data+'\n\n' })
+      request('GET','../_common/JS/shorts.js', data =>
+              { byId('comjs').innerText += data+'\n\n' })
+    </script>
   </body>
 </html>
