@@ -1,28 +1,28 @@
 'use strict';
 
 function request(type, url, cb, reportcb, falldata, fallcb) {
-  const r = new XMLHttpRequest();
-  r.open(type, url, true);
-  r.onload = () => {
-    if (cb) {
-      if (r.status >= 200 && r.status < 400) {
-        if (!r.response.startsWith('<?php')) {
-          if (r.response !== '') cb(r.response);
-          else cb();
+  const xhr = new XMLHttpRequest();
+  xhr.open(type, url, true);
+  xhr.onload = () => {
+    if (fallcb) falldata ? fallcb(falldata) : fallcb();
+    else if (cb) {
+      if (xhr.status >= 200 && xhr.status < 400) {
+        if (!xhr.response.startsWith('<?php')) {
+          if (xhr.response !== '') cb(xhr.response);
+          else cb() || reportcb ? reportcb('php-response was empty') :0 ;
         }
         else if (reportcb)
-          reportcb('php file content returned instead of php-response');
+          reportcb('php-file content returned instead of php-response');
       }
       else {
-        if (reportcb) reportcb('request.status is ' + r.status);
+        if (reportcb) reportcb('request.status is ' + xhr.status);
         falldata ? cb(falldata) : cb();
       }
     }
-    else if (fallcb) falldata ? fallcb(falldata) : fallcb();
   }
-  r.onerror =
+  xhr.onerror =
     e => reportcb(type + ' request to '+ url + ' produced ' + e);
-  r.ontimeout =
+  xhr.ontimeout =
     () => reportcb(type + ' request to '+ url + ' timed out!');
-  r.send();
+  xhr.send();
 }

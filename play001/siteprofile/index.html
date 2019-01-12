@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>PLAY 001 - site profile</title>
     <link href=../style.css rel=stylesheet>
-    <script src=../_common/JS/request.js></script>
     <script src=../_common/JS/shorts.js></script>
+    <script src=../_common/JS/request.js></script>
 
   </head>
   <body>
@@ -38,8 +38,7 @@
 
     <script>
       function insertPreCode(from, to) {
-        request('GET', from, data => { byId(to).innerText += data+'\n\n' })
-      }
+        request('GET', from, data => { byId(to).innerText += data+'\n\n' }) }
       insertPreCode('../index.html', 'html')
       insertPreCode('../style.css', 'css')
       insertPreCode('../script.js', 'js')
