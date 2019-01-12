@@ -8,7 +8,13 @@ require_once $_SERVER['DOCUMENT_ROOT'].'sbdb.php';
 
 //echo 'Jeronimo!';
 
-$arr = array(1, 2, 3, 'a'=>4);
-echo json_encode($arr);
+$creds    = array();
+$updates  = array();
+$data     = array();
+$message  = array();
+$settings = array('option1'=>true, 'option2'=>false);
+$response = array('creds'=>$creds, 'data'=>$data, 'cfg'=>$settings,
+                  'msg'=>$message, 'upd'=>$updates);
+echo json_encode($response);
 
 ?>
