@@ -190,9 +190,9 @@ switch ($_REQUEST['task']) {
     if ($fields) $fields = json_decode($fields);
 
     if (!$userid) {
-      if (!isset($freeAccess[$table])) exit
+      if (!isset($freeAccess[$tbl])) exit
         (json_encode(Response(129, 'F', "No table $tbl available")));
-      if ($wrong = implode(array_diff($fields, $freeAccess[$table]), ', '))
+      if ($wrong = implode(array_diff($fields, $freeAccess[$tbl]), ', '))
         exit (json_encode(Response(130, 'F',
                        "Field(s) $wrong are not available in the $tbl table")));
       $ownOnly = false;
@@ -200,18 +200,18 @@ switch ($_REQUEST['task']) {
     else {
       $freeAccess = array_merge_recursive($freeAccess, $userAccess);
       $privAccess = array_merge_recursive($freeAccess, $privAccess);
-      if ($ownOnly  or !isset($freeAccess[$table]) or
-          array_diff($fields, $freeAccess[$table])) {
-        if (!isset($privAccess[$table])) exit
-          (json_encode(Response(129, 'F', "No table $tbl available")));
-        if ($wrong = implode(array_diff($fields, $privAccess[$table]), ', '))
+      if ($ownOnly  or !isset($freeAccess[$tbl]) or
+          array_diff($fields, $freeAccess[$tbl])) {
+        if (!isset($privAccess[$tbl])) exit
+          (json_encode(Response(129, 'F', "No table $tbl available", $data)));
+        if ($wrong = implode(array_diff($fields, $privAccess[$tbl]), ', '))
           exit (json_encode(Response(130, 'F',
-                       "Field(s) $wrong are not available in the $tbl table")));
+                "Field(s) $wrong are not available in the $tbl table", $data)));
         $ownOnly = true;
       }
     }
 
-    if (!$fields) $fields = $ownOnly? $privAccess[$table] : $freeAccess[$table];
+    if (!$fields) $fields = $ownOnly? $privAccess[$tbl] : $freeAccess[$tbl];
     $data['headers'] = $fields;
     $fields = implode($fields, ', ');
 
@@ -224,7 +224,7 @@ switch ($_REQUEST['task']) {
     if ($rows = sizeof($data['rows']) and $columns = sizeof($data['headers']))
       echo json_encode(Response(127, 'S',
                           "$rows records of $columns fields delivered", $data));
-    else echo json_encode(Response(128, 'S', "Query returned no data"));
+    else echo json_encode(Response(128, 'S', "Query returned no data", $data));
   } break;
 
   default: {}

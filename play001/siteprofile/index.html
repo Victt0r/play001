@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <title>PLAY 001 - site profile</title>
     <link href=../style.css rel=stylesheet>
-    <script src=../_Common/ommon/JS/shorts.js></script>
+    <script src=../_Common/JS/shorts.js></script>
     <script src=../_Common/JS/request.js></script>
-    <script src=../_Common/JS/cookies.js></script>
 
   </head>
   <body>
@@ -16,12 +15,14 @@
         <a href=..>play 001</a>
         <a href=https://github.com/UniBreakfast/play001>git</a>
       </nav>
-      <section>
-        <article> <h4>HTML</h4>      <pre id=html></pre>  </article>
-        <article> <h4>CSS</h4>       <pre id=css></pre>   </article>
-        <article> <h4>JS</h4>        <pre id=js></pre>    </article>
-        <article> <h4>common JS</h4> <pre id=comjs></pre> </article>
-        <article> <h4>PHP</h4>       <pre id=php></pre>   </article>
+      <section> <hr style=margin-top:10px>
+        <article> <h4>HTML</h4>           <pre id=html></pre>  </article> <hr>
+        <article> <h4>CSS</h4>            <pre id=css></pre>   </article> <hr>
+        <article> <h4>JS</h4>             <pre id=js></pre>    </article> <hr>
+        <article> <h4>common JS</h4>      <pre id=comjs></pre> </article> <hr>
+        <article> <h4>JS GateKeeper</h4>  <pre id=jsgk></pre>  </article> <hr>
+        <article> <h4>PHP</h4>            <pre id=php></pre>   </article> <hr>
+        <article> <h4>PHP GateKeeper</h4> <pre id=phpgk></pre> </article> <hr>
       </section>
 
     </div>
@@ -33,10 +34,21 @@
       insertPreCode('../index.html', 'html')
       insertPreCode('../style.css', 'css')
       insertPreCode('../script.js', 'js')
-      insertPreCode('../_common/JS/request.js', 'comjs')
-      insertPreCode('../_common/JS/shorts.js', 'comjs')
+      insertPreCode('../_Common/JS/request.js', 'comjs')
+      insertPreCode('../_Common/JS/shorts.js', 'comjs')
+      insertPreCode('../_Common/JS/f.js', 'comjs')
+      insertPreCode('../_Common/JS/cookies.js', 'comjs')
+      insertPreCode('../_Common/JS/hub.js', 'comjs')
+      insertPreCode('../GateKeeper/JS/gkvars.js', 'jsgk')
+      insertPreCode('../GateKeeper/JS/gk.js', 'jsgk')
       insertPreCode('https://raw.githubusercontent.com/UniBreakfast/play001'+
                     '/master/play001/process.php', 'php')
+      insertPreCode('https://raw.githubusercontent.com/UniBreakfast/play001'+
+                    '/master/play001/GateKeeper/PHP/gkvars.php', 'phpgk')
+      insertPreCode('https://raw.githubusercontent.com/UniBreakfast/play001'+
+                    '/master/play001/GateKeeper/PHP/gk.php', 'phpgk')
+      insertPreCode('https://raw.githubusercontent.com/UniBreakfast/play001'+
+                    '/master/play001/GateKeeper/PHP/permits.php', 'phpgk')
 
     </script>
   </body>

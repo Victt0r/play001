@@ -159,7 +159,8 @@ const hub = (() => {
   }
 
 
-  // public methods for hub object: publish (triggers event handlers), subscribe, unsubscribe, list
+  // public methods for hub object: publish (triggers event handlers),
+  // subscribe, unsubscribe, list
   const hub = {log, gr_log};
 
   hub.pub   =   pub.bind(hub);

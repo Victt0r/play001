@@ -11,12 +11,15 @@ body {
 #body {
   margin: auto;
   padding: 10px;
+  padding-left: 20px;
   border-radius: 10px;
   background: cornsilk
 }
 
 a {
-  margin: 5px
+  margin: 5px;
+  font-weight: bold;
+  color: black
 }
 
 h4 {
