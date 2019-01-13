@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
+require_once 'codemsg.php';
 require_once 'gkvars.php';
 require_once 'permits.php';
 
@@ -8,6 +9,7 @@ require_once $commonsPath.'krumo.php';
 require_once $commonsPath.'f.php';
 
 require_once 'Auth/checks.php';
+
 
 function Response($code, $type, $text, $data=null) {
   switch ($type) {
@@ -17,6 +19,12 @@ function Response($code, $type, $text, $data=null) {
     case 'I': $type = 'INFO';     break;
   }
   $response = array('msg' => array('code'=>$code,'type'=>$type,'text'=>$text));
+  if ($data) $response['data'] = $data;
+  return $response;
+}
+
+function ResponseNew($msg, $data=null) {
+  $response = array('msg' => $msg);
   if ($data) $response['data'] = $data;
   return $response;
 }
@@ -222,8 +230,10 @@ switch ($_REQUEST['task']) {
     }
     $data['rows'] = f::getRecords($db, $q);
     if ($rows = sizeof($data['rows']) and $columns = sizeof($data['headers']))
-      echo json_encode(Response(127, 'S',
-                          "$rows records of $columns fields delivered", $data));
+      //echo json_encode(Response(127, 'S',
+                          //"$rows records of $columns fields delivered", $data));
+      echo json_encode(ResponseNew(
+               codeLine(127, array('rows'=>$rows,'columns'=>$columns)), $data));
     else echo json_encode(Response(128, 'S', "Query returned no data", $data));
   } break;
 

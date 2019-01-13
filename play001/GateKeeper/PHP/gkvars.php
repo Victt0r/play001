@@ -2,6 +2,9 @@
 
 # SERVER-SIDE OPTIONS OF clerk module
 
+# language code
+$lang = 'eng';
+
 # where to find f.php, krumo etc
 $commonsPath = '../../_Common/PHP/';
 
