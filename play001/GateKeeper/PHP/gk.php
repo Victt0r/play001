@@ -11,7 +11,7 @@ require_once $commonsPath.'f.php';
 require_once 'Auth/checks.php';
 
 
-function Response($code, $type, $text, $data=null) {
+function ResponseOld($code, $type, $text, $data=null) {
   switch ($type) {
     case 'S': $type = 'SUCCESS';  break;
     case 'F': $type = 'FAIL';     break;
@@ -23,7 +23,7 @@ function Response($code, $type, $text, $data=null) {
   return $response;
 }
 
-function ResponseNew($msg, $data=null) {
+function Response($msg, $data=null) {
   $response = array('msg' => $msg);
   if ($data) $response['data'] = $data;
   return $response;
@@ -36,22 +36,21 @@ switch ($_REQUEST['task']) {
     if ($login and $pass) {
       $q = "SELECT login FROM $tblUsers WHERE login = ?";
       if (f::getValue($db, $q, qp($login,'s')))
-        echo json_encode(Response(101, 'F', "Login $login already occupied"));
+        echo json_encode(Response(codeLine(101, $login)));
       else {
         $hash = hashStr($pass);
         $q = "INSERT $tblUsers (login, passhash) VALUES (?, '$hash')";
         f::execute($db, $q, qp($login,'s'));
-        echo json_encode(Response(100, 'S', "User $login is registered!"));
+        echo json_encode(Response(codeLine(100, $login)));
       }
     }
-    else echo json_encode(Response(102, 'E',
-                                   "Not enough credentials to register!"));
+    else echo json_encode(Response(codeLine(102)));
   } break;
 
   case 'login': {
     list ($login, $pass) = f::request('login', 'pass');
     if ($login and $pass) {
-      $q = "SELECT id, passhash FROM $tblUsers WHERE login = ?";
+      $q = "SELECT id, passhash FROM $tblUsers WHERE BINARY login = ?";
       if (list ($userid, $hash) = f::getRecord($db, $q, qp($login,'s'))) {
 
         if (hashCheck($pass, $hash)) {
@@ -66,17 +65,14 @@ switch ($_REQUEST['task']) {
                       ORDER BY dt_modify DESC LIMIT $sessNum) AS tmp)";
           f::execute($db, $q);
 
-          echo json_encode(Response(103,'S',"You are signed in now as $login!",
+          echo json_encode(Response(codeLine(103, $login),
             array('userid'=>$userid, 'token'=>$token, 'expire'=>$sessExpire)));
         }
-        else echo json_encode(Response(104, 'F',
-                                       "Can't sign in. Incorrect password!"));
+        else echo json_encode(Response(codeLine(104)));
       }
-      else echo json_encode(Response(105, 'F',
-                                     "Can't sign in. User $login not found!"));
+      else echo json_encode(Response(codeLine(105, $login)));
     }
-    else echo json_encode(Response(106, 'E',
-                                   "Not enough credentials to sign in!"));
+    else echo json_encode(Response(codeLine(106)));
   } break;
 
   case 'check': {
@@ -89,13 +85,12 @@ switch ($_REQUEST['task']) {
         $token = randStr();
         $q = "UPDATE $tblSessions SET token = '$token' WHERE id = $id";
         f::execute($db, $q);
-        echo json_encode(Response(107, 'I', "Session confirmed, "
-          ."you are signed in", array('token'=>$token, 'expire'=>$sessExpire)));
+        echo json_encode(Response(codeLine(107),
+                                array('token'=>$token, 'expire'=>$sessExpire)));
       }
-      else echo json_encode(Response(108, 'I', "No such session in act"));
+      else echo json_encode(Response(codeLine(108)));
     }
-    else echo json_encode(Response(110, 'E',
-                                   "No complete session cookie provided"));
+    else echo json_encode(Response(codeLine(110)));
   } break;
 
   case 'logout': {
@@ -107,8 +102,7 @@ switch ($_REQUEST['task']) {
       if (list ($id, $bfp) = f::getRecord($db, $q, $p) and bfpCheck($bfp))
         f::execute($db, "DELETE FROM $tblSessions WHERE id = $id");
     }
-    else echo json_encode(Response(112, 'E',
-                                   "No complete session cookie provided"));
+    else echo json_encode(Response(codeLine(112)));
   } break;
 
   case 'newpass': {
@@ -122,17 +116,13 @@ switch ($_REQUEST['task']) {
           $hash = hashStr($newpass);
           $q = "UPDATE $tblUsers SET passhash = '$hash' WHERE id = $userid";
           f::execute($db, $q);
-          echo json_encode(Response(114, 'S',
-                                    "Password changed for user $login"));
+          echo json_encode(Response(codeLine(114, $login)));
         }
-        else echo json_encode(Response(115, 'F',
-                                 "Can't change password. Incorrect password!"));
+        else echo json_encode(Response(codeLine(115)));
       }
-      else echo json_encode(Response(116, 'F',
-                               "Can't change password. No user $login found!"));
+      else echo json_encode(Response(codeLine(116, $login)));
     }
-    else echo json_encode(Response(117, 'E',
-                                 "Not enough credentials to change password!"));
+    else echo json_encode(Response(codeLine(117)));
   } break;
 
   case 'rename': {
@@ -145,17 +135,13 @@ switch ($_REQUEST['task']) {
         if (hashCheck($pass, $hash)) {
           $q = "UPDATE $tblUsers SET login = ? WHERE id = $userid";
           f::execute($db, $q, qp($newlogin,'s'));
-          echo json_encode(Response(118, 'S',
-                                  "Login changed from $oldlogin to $newlogin"));
+          echo json_encode(Response(codeLine(118, $oldlogin, $newlogin)));
         }
-        else echo json_encode(Response(119, 'F',
-                                    "Can't change login. Incorrect password!"));
+        else echo json_encode(Response(codeLine(119)));
       }
-      else echo json_encode(Response(120, 'F',
-                               "Can't change login. No user $oldlogin found!"));
+      else echo json_encode(Response(codeLine(120, $oldlogin)));
     }
-    else echo json_encode(Response(121, 'E',
-                                   "Not enough credentials to change login!"));
+    else echo json_encode(Response(codeLine(121)));
   } break;
 
   case 'unreg': {
@@ -167,16 +153,13 @@ switch ($_REQUEST['task']) {
         if (hashCheck($pass, $hash)) {
           $q = "DELETE FROM $tblUsers WHERE id = $userid";
           f::execute($db, $q);
-          echo json_encode(Response(122,'S',"User $login removed!"));
+          echo json_encode(Response(codeLine(122, $login)));
         }
-        else echo json_encode(Response(123, 'F',
-                                      "Can't unregister. Incorrect password!"));
+        else echo json_encode(Response(codeLine(123, $login)));
       }
-      else echo json_encode(Response(124, 'F',
-                         "Can't unregister. No user with login $login found!"));
+      else echo json_encode(Response(codeLine(124, $login)));
     }
-    else echo json_encode(Response(125, 'E',
-                                   "Not enough credentials to unregister!"));
+    else echo json_encode(Response(codeLine(125)));
   } break;
 
   case 'get': {
@@ -211,10 +194,9 @@ switch ($_REQUEST['task']) {
       if ($ownOnly  or !isset($freeAccess[$tbl]) or
           array_diff($fields, $freeAccess[$tbl])) {
         if (!isset($privAccess[$tbl])) exit
-          (json_encode(Response(129, 'F', "No table $tbl available", $data)));
+          (json_encode(Response(codeLine(129, $tbl) ,$data)));
         if ($wrong = implode(array_diff($fields, $privAccess[$tbl]), ', '))
-          exit (json_encode(Response(130, 'F',
-                "Field(s) $wrong are not available in the $tbl table", $data)));
+          exit (json_encode(Response(codeLine(130, $wrong, $table), $data)));
         $ownOnly = true;
       }
     }
@@ -230,11 +212,8 @@ switch ($_REQUEST['task']) {
     }
     $data['rows'] = f::getRecords($db, $q);
     if ($rows = sizeof($data['rows']) and $columns = sizeof($data['headers']))
-      //echo json_encode(Response(127, 'S',
-                          //"$rows records of $columns fields delivered", $data));
-      echo json_encode(ResponseNew(
-               codeLine(127, array('rows'=>$rows,'columns'=>$columns)), $data));
-    else echo json_encode(Response(128, 'S', "Query returned no data", $data));
+      echo json_encode(Response(codeLine(127, $rows, $columns), $data));
+    else echo json_encode(Response(codeLine(128), $data));
   } break;
 
   default: {}
