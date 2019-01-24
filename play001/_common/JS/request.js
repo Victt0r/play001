@@ -28,6 +28,7 @@ function request(type, url, cb, reportcb, falldata, fallcb, simonly, rawphp) {
       }
     }
     xhr.onerror   =  e => reportcb(`${type} ${url} produced ${e}`);
+    xhr.timeout = 20000;
     xhr.ontimeout = () => reportcb(`${type} ${url} timed out`);
     xhr.send();
   }
